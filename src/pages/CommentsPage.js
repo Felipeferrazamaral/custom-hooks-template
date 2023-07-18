@@ -3,29 +3,24 @@ import { BASE_URL } from "../constants/constants";
 import axios from "axios";
 import {Title,PostContainer } from '../style'
 import { Card } from '../components/Card/Card'
+import useCapturarComments from "../hooks/useCapturarComments";
+import useRequestData from "../hooks/useRequestData";
 
 
 const  CommentsPage = () => {
-  const [postagens, setPostagens] = useState([]);
-
-
-  useEffect(() => {
-    axios
-      .get(`${BASE_URL}comments`)
-      .then((response) => {
-        setPostagens(response.data);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }, []);
+  
+  const [postagens, isLoading, isError] = useRequestData('comments')
 
   return (
     <div>
       <Title>Comentários dos usuários</Title>
       <PostContainer>
 
-      {postagens.map((post) => {
+      {isError ? <p>ERRO! Tente Novamente.</p>:
+        isLoading ? <p>CARREGANDO...
+
+        </p> :
+      postagens.map((post) => {
         //console.log(post);
         return(
           <Card 
